@@ -1,0 +1,9 @@
+ACCOUNTS=["GDMPBI2H6VYVUEZ62ZV7N6QB5N6KFCWW7FZOPCQ5B4XXGFUZHH7MFPNK"]
+TRANSFER_SERVER="https://interop.example.org/sep24"
+TRANSFER_SERVER_SEP0024="https://interop.example.org/sep24"
+WEB_AUTH_ENDPOINT="https://interop.example.org/sep10"
+SIGNING_KEY="GBLPLXAPQFBFKKGV4RE5P5QV4DU7JOKKUE7MMPRZ2H4WHHBLQMPZLMJ"
+NETWORK_PASSPHRASE="Public Global Stellar Network ; September 2015"
+KYC_SERVER="https://interop.example.org/kyc"
+DIRECT_PAYMENT_SERVER="https://interop.example.org/sep31"
+QUOTE_SERVER="https://interop.example.org/sep38"
