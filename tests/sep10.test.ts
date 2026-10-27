@@ -25,6 +25,35 @@ describe("sep10AuthResponse", () => {
     expect(r.message).toContain("token");
   });
 
+  it("fails when token is an empty string", () => {
+    const r = sep10AuthResponse.run({ authResponse: { token: "" } });
+    expect(r.status).toBe("fail");
+    expect(r.message).toBe("Field 'token' must be a non-empty string");
+  });
+
+  it("fails when token is whitespace only", () => {
+    const cases = [" ", "   ", "\t", "\n", "\t\n"];
+    for (const value of cases) {
+      const r = sep10AuthResponse.run({ authResponse: { token: value } });
+      expect(r.status).toBe("fail");
+      expect(r.message).toBe("Field 'token' must be a non-empty string");
+    }
+  });
+
+  it("passes when token has surrounding whitespace", () => {
+    const r = sep10AuthResponse.run({ authResponse: { token: "  eyJhbG...t0z0  " } });
+    expect(r.status).toBe("pass");
+  });
+
+  it("fails when token is not a string", () => {
+    const cases = [null, 42, { a: 1 }, ["x"], true];
+    for (const value of cases) {
+      const r = sep10AuthResponse.run({ authResponse: { token: value } });
+      expect(r.status).toBe("fail");
+      expect(r.message).toBe("Field 'token' must be a non-empty string");
+    }
+  });
+
   it("errors with no authResponse", () => {
     const r = sep10AuthResponse.run({});
     expect(r.status).toBe("error");

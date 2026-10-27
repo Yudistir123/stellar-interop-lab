@@ -37,6 +37,19 @@ export const sep10AuthResponse: CheckDefinition = {
         durationMs: performance.now() - t0,
       };
     }
+    // SEP-10 defines `token` as the JWT that can be used to authenticate
+    // future endpoint calls. A string with no non-whitespace content carries
+    // no JWT and cannot serve that purpose.
+    if (typeof body.token !== "string" || body.token.trim().length === 0) {
+      return {
+        id: sep10AuthResponse.id,
+        category: "sep10",
+        status: "fail",
+        message: "Field 'token' must be a non-empty string",
+        details: { tokenType: typeof body.token },
+        durationMs: performance.now() - t0,
+      };
+    }
     return {
       id: sep10AuthResponse.id,
       category: "sep10",
