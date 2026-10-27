@@ -19,7 +19,6 @@ describe("integration: valid anchor", () => {
         status: "completed",
         amount_in: "100",
         amount_out: "98.5",
-        asset: "USDC:GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
       },
       metadata: {
         quote: {
@@ -35,5 +34,33 @@ describe("integration: valid anchor", () => {
     expect(report.failed).toBe(0);
     expect(report.errors).toBe(0);
     expect(report.results).toHaveLength(5);
+  });
+
+  it("SEP-31 transaction without asset field is not rejected", async () => {
+    // SEP-31 v3.1.0 transaction object has no `asset` field; assets are
+    // expressed via amount_in_asset / amount_out_asset (SEP-38 format).
+    const report = await runChecks(
+      {
+        transactionStatus: {
+          id: "tx-1",
+          status: "completed",
+          amount_in: "100",
+          amount_out: "98.5",
+        },
+      },
+      { filter: ["sep31.transaction_status"] },
+    );
+    const r = report.results[0];
+    expect(r?.status).toBe("pass");
+    expect(report.failed).toBe(0);
+    expect(report.errors).toBe(0);
+  });
+
+  it("SEP-31 transaction with only id and status passes", async () => {
+    const report = await runChecks(
+      { transactionStatus: { id: "tx-1", status: "pending_stellar" } },
+      { filter: ["sep31.transaction_status"] },
+    );
+    expect(report.results[0]?.status).toBe("pass");
   });
 });

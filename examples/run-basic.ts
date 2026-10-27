@@ -17,7 +17,6 @@ const report = await runChecks({
     status: "completed",
     amount_in: "100",
     amount_out: "98.5",
-    asset: "USDC:GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
   },
   metadata: {
     quote: {
