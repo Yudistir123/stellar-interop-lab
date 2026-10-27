@@ -9,6 +9,7 @@
  */
 
 import type { CheckContext, CheckResult, CheckDefinition } from "../types/index.ts";
+import { validateAssetIdentifier } from "./asset-identifier.ts";
 
 const REQUIRED_TX_FIELDS = ["id", "status"];
 
@@ -24,6 +25,16 @@ const VALID_STATUSES: readonly string[] = [
   "expired",
   "error",
 ];
+
+/**
+ * SEP-31 fields whose values must be in SEP-38 Asset Identification Format.
+ * All are optional; when present, the format is validated.
+ */
+const ASSET_IDENTIFIER_FIELDS = [
+  "amount_in_asset",
+  "amount_out_asset",
+  "amount_fee_asset",
+] as const;
 
 export const sep31TransactionStatus: CheckDefinition = {
   id: "sep31.transaction_status",
@@ -59,6 +70,24 @@ export const sep31TransactionStatus: CheckDefinition = {
         status: "fail",
         message: `Invalid status value: ${String(tx.status)}`,
         details: { status: tx.status, valid: VALID_STATUSES },
+        durationMs: performance.now() - t0,
+      };
+    }
+    const invalidAssets: Record<string, string> = {};
+    for (const field of ASSET_IDENTIFIER_FIELDS) {
+      if (!(field in tx)) continue;
+      const error = validateAssetIdentifier(tx[field]);
+      if (error !== null) {
+        invalidAssets[field] = error;
+      }
+    }
+    if (Object.keys(invalidAssets).length > 0) {
+      return {
+        id: sep31TransactionStatus.id,
+        category: "sep31",
+        status: "fail",
+        message: `Invalid SEP-38 asset identifier in: ${Object.keys(invalidAssets).join(", ")}`,
+        details: { invalidAssets },
         durationMs: performance.now() - t0,
       };
     }

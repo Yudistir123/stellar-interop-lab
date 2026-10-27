@@ -63,4 +63,38 @@ describe("integration: valid anchor", () => {
     );
     expect(report.results[0]?.status).toBe("pass");
   });
+
+  it("SEP-31 transaction with valid SEP-38 asset identifiers passes", async () => {
+    const report = await runChecks(
+      {
+        transactionStatus: {
+          id: "tx-1",
+          status: "completed",
+          amount_in: "100",
+          amount_in_asset:
+            "stellar:USDC:GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+          amount_out: "500",
+          amount_out_asset: "iso4217:BRL",
+        },
+      },
+      { filter: ["sep31.transaction_status"] },
+    );
+    expect(report.results[0]?.status).toBe("pass");
+  });
+
+  it("SEP-31 transaction with invalid asset identifier fails", async () => {
+    const report = await runChecks(
+      {
+        transactionStatus: {
+          id: "tx-1",
+          status: "completed",
+          amount_in_asset:
+            "USDC:GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+        },
+      },
+      { filter: ["sep31.transaction_status"] },
+    );
+    expect(report.results[0]?.status).toBe("fail");
+    expect(report.results[0]?.message).toContain("amount_in_asset");
+  });
 });
