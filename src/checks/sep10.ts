@@ -1,10 +1,14 @@
 /**
  * Check: SEP-10 authentication response contains required fields.
+ *
+ * Per SEP-10 v3.1.0, a successful token endpoint response is a JSON object
+ * with a single required field: `token` (the JWT). Request parameters such as
+ * `account`, `memo`, and `client_domain` are not part of the response schema.
  */
 
 import type { CheckContext, CheckResult, CheckDefinition } from "../types/index.ts";
 
-const REQUIRED_AUTH_FIELDS = ["token", "account", "memo", "memo_type"];
+const REQUIRED_AUTH_FIELDS = ["token"];
 
 export const sep10AuthResponse: CheckDefinition = {
   id: "sep10.auth_response",
