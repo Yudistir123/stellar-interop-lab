@@ -1,0 +1,18 @@
+# CODEOWNERS for Yudistir123/stellar-interop-lab
+# Default owner: every path is owned by @Yudistir123, so review
+# requests route to the maintainer until other maintainers are added.
+# Explicit per-area entries mirror the repo's area labels, so a future
+# second maintainer can take an area by editing one line.
+
+* @Yudistir123
+/src/checks/ @Yudistir123
+/src/runner/ @Yudistir123
+/src/cli.ts @Yudistir123
+/tests/ @Yudistir123
+/fixtures/ @Yudistir123
+/.github/ @Yudistir123
+README.md @Yudistir123
+SPEC.md @Yudistir123
+CONTRIBUTING.md @Yudistir123
+CODE_OF_CONDUCT.md @Yudistir123
+SECURITY.md @Yudistir123
